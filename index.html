@@ -3,39 +3,120 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DRIPPERER QUEST</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Quiz della Band</title>
+    <style>
+        body {
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            background-color: white;
+            color: black;
+        }
+        .container {
+            width: 50%;
+            margin: auto;
+            text-align: center;
+        }
+        .question {
+            margin: 20px 0;
+        }
+        .options {
+            margin: 10px 0;
+        }
+        .button {
+            margin: 20px 0;
+        }
+    </style>
 </head>
 <body>
-    <div id="menu">
-        <button id="menuButton">☰</button>
-        <div id="menuContent">
-            <button id="loginBtn">Accedi / Registrati</button>
-            <button id="homeBtn">Home</button>
-            <button id="leaderboardBtn">Classifica</button>
-        </div>
+    <div class="container">
+        <h1>Quiz della Band</h1>
+        <div id="quiz"></div>
+        <button class="button" onclick="submitQuiz()">Invia Risposte</button>
     </div>
 
-    <div id="login" class="page">
-        <h1>Login / Registrati</h1>
-        <input type="text" id="username" placeholder="Username">
-        <input type="password" id="password" placeholder="Password">
-        <button id="loginSubmit">Accedi</button>
-        <button id="registerSubmit">Registrati</button>
-    </div>
+    <script>
+        const questions = [
+            {
+                question: "Qual è il titolo del primo album della band?",
+                options: ["Smile", "Drip&Chill", "Manchi"],
+                answer: "Smile"
+            },
+            {
+                question: "In che anno è stata fondata la band?",
+                options: ["2022", "2023", "2024"],
+                answer: "2023"
+            },
+            {
+                question: "Qual è il genere musicale della band?",
+                options: ["Pop", "Rock", "PopRock"],
+                answer: "PopRock"
+            },
+            {
+                question: "Qual è il titolo della prima canzone della band?",
+                options: ["Drip&Chill", "Manchi", "Smile"],
+                answer: "Drip&Chill"
+            },
+            {
+                question: "Chi è il pianista della band?",
+                options: ["Ilaria", "Lorelayne", "Sebasthian"],
+                answer: "Lorelayne"
+            },
+            {
+                question: "Chi è la chitarrista della band?",
+                options: ["Andrea", "Ilaria", "Lorelayne"],
+                answer: "Ilaria"
+            },
+            {
+                question: "Chi è il batterista della band?",
+                options: ["Sebasthian", "Andrea", "Lorelayne"],
+                answer: "Sebasthian"
+            },
+            {
+                question: "Chi è l'ukulelista della band?",
+                options: ["Andrea", "Ilaria", "Sebasthian"],
+                answer: "Andrea"
+            },
+            {
+                question: "Quanti membri aveva inizialmente la band?",
+                options: ["4", "5", "6"],
+                answer: "5"
+            },
+            {
+                question: "Qual è il titolo della prossima canzone della band?",
+                options: ["Manchi", "Drip&Chill", "Smile"],
+                answer: "Manchi"
+            },
+        ];
 
-    <div id="home" class="page" style="display:none;">
-        <h1>DRIPPERER QUEST</h1>
-        <div id="questionsList"></div>
-        <input type="text" id="videoLinks" placeholder="Inserisci massimo 5 link TikTok/Shorts">
-        <button id="submitVideos">Invia Video</button>
-    </div>
+        function loadQuiz() {
+            const quizContainer = document.getElementById('quiz');
+            questions.forEach((q, index) => {
+                const questionElement = document.createElement('div');
+                questionElement.classList.add('question');
+                questionElement.innerHTML = `<p>${q.question}</p>`;
+                q.options.forEach((option) => {
+                    questionElement.innerHTML += `
+                        <div class="options">
+                            <input type="radio" name="question${index}" value="${option}"> ${option}
+                        </div>
+                    `;
+                });
+                quizContainer.appendChild(questionElement);
+            });
+        }
 
-    <div id="leaderboard" class="page" style="display:none;">
-        <h1>Classifica Settimanale</h1>
-        <div id="leaderboardList"></div>
-    </div>
+        function submitQuiz() {
+            let score = 0;
+            questions.forEach((q, index) => {
+                const selectedOption = document.querySelector(`input[name="question${index}"]:checked`);
+                if (selectedOption && selectedOption.value === q.answer) {
+                    score++;
+                }
+            });
+            alert(`Hai totalizzato ${score} punti su ${questions.length}.`);
+        }
 
-    <script src="script.js"></script>
+        // Carica il quiz quando la pagina è pronta
+        window.onload = loadQuiz;
+    </script>
 </body>
 </html>
