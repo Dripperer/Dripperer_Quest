@@ -15,18 +15,49 @@ let currentUser = null;
 let score = 0;
 let videoLinks = [];
 
+// Aggiungi eventi per il login e il menu
 document.getElementById('menuButton').onclick = toggleMenu;
 document.getElementById('loginSubmit').onclick = login;
 document.getElementById('registerSubmit').onclick = register;
 document.getElementById('submitVideos').onclick = submitVideos;
 document.getElementById('homeBtn').onclick = showHome;
 document.getElementById('leaderboardBtn').onclick = showLeaderboard;
+document.getElementById('backBtn').onclick = showHome; // Aggiungi il ritorno alla home
 
+// Funzione per il countdown settimanale
+function startCountdown() {
+    const endDate = new Date(localStorage.getItem('weekEndDate') || new Date().getTime() + 7 * 24 * 60 * 60 * 1000); // Imposta 7 giorni come scadenza
+    localStorage.setItem('weekEndDate', endDate);
+
+    function updateCountdown() {
+        const now = new Date();
+        const timeLeft = endDate - now;
+
+        if (timeLeft <= 0) {
+            document.getElementById('countdown').innerText = "Tempo Scaduto!";
+            localStorage.removeItem('leaderboard');  // Reset della classifica dopo una settimana
+        } else {
+            const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+            document.getElementById('countdown').innerText = `Tempo rimasto: ${days}g ${hours}h ${minutes}m ${seconds}s`;
+        }
+    }
+
+    setInterval(updateCountdown, 1000);
+    updateCountdown();
+}
+
+startCountdown();
+
+// Funzione per il menu
 function toggleMenu() {
     const menuContent = document.getElementById('menuContent');
     menuContent.style.display = (menuContent.style.display === 'block') ? 'none' : 'block';
 }
 
+// Funzione di login
 function login() {
     const username = document.getElementById('username').value;
     const password = document.getElementById('password').value;
@@ -39,6 +70,7 @@ function login() {
     }
 }
 
+// Funzione di registrazione
 function register() {
     const username = document.getElementById('username').value;
     const password = document.getElementById('password').value;
@@ -52,9 +84,16 @@ function register() {
     }
 }
 
+// Mostra la home dopo il login
 function showHome() {
+    if (!currentUser) {
+        alert("Per favore, effettua il login prima di accedere alla Home.");
+        return;
+    }
+    
     document.getElementById('login').style.display = 'none';
     document.getElementById('leaderboard').style.display = 'none';
+    document.getElementById('questionPage').style.display = 'none';
     document.getElementById('home').style.display = 'block';
     
     const questionsList = document.getElementById('questionsList');
@@ -68,55 +107,63 @@ function showHome() {
     });
 }
 
-function showQuestion(index) {
-    const question = questions[index];
-    const questionPage = document.createElement('div');
-    questionPage.innerHTML = `<h2>${question.question}</h2>`;
-    
-    question.options.forEach(option => {
-        const optionButton = document.createElement('button');
-        optionButton.innerText = option;
-        optionButton.onclick = () => checkAnswer(option, question.answer, index);
-        questionPage.appendChild(optionButton);
-    });
-
-    document.getElementById('home').innerHTML = '';
-    document.getElementById('home').appendChild(questionPage);
-}
-
-function checkAnswer(selectedAnswer, correctAnswer, questionIndex) {
-    if (selectedAnswer === correctAnswer) {
-        score += 10;
-        alert('Risposta corretta!');
-    } else {
-        alert(`Risposta sbagliata! La risposta corretta era: ${correctAnswer}`);
-    }
-    if (questionIndex + 1 < questions.length) {
-        showHome();  // Passa alla prossima domanda
-    } else {
-        alert('Hai completato tutte le domande!');
-    }
-}
-
-function submitVideos() {
-    const videoInput = document.getElementById('videoLinks').value;
-    const videos = videoInput.split(',').map(link => link.trim()).slice(0, 5);
-
-    videoLinks = videoLinks.concat(videos);
-    score += videos.length * 5;
-    alert(`Hai inviato ${videos.length} video! Hai guadagnato ${videos.length * 5} punti.`);
-}
-
+// Mostra la classifica solo se l'utente è loggato
 function showLeaderboard() {
-    const leaderboard = JSON.parse(localStorage.getItem('leaderboard')) || [];
-
-    leaderboard.push({ user: currentUser, score: score });
-    leaderboard.sort((a, b) => b.score - a.score);
-    localStorage.setItem('leaderboard', JSON.stringify(leaderboard));
-
+    if (!currentUser) {
+        alert("Per favore, effettua il login per vedere la classifica.");
+        return;
+    }
+    
+    document.getElementById('login').style.display = 'none';
+    document.getElementById('home').style.display = 'none';
+    document.getElementById('questionPage').style.display = 'none';
+    document.getElementById('leaderboard').style.display = 'block';
+    
+    const leaderboard = JSON.parse(localStorage.getItem('leaderboard') || '[]');
     const leaderboardList = document.getElementById('leaderboardList');
     leaderboardList.innerHTML = leaderboard.map((entry, index) => `<p>${index + 1}. ${entry.user} - ${entry.score} punti</p>`).join('');
+}
+
+// Mostra la pagina della domanda con freccia per tornare
+function showQuestion(index) {
+    if (!currentUser) {
+        alert("Per favore, effettua il login per rispondere alle domande.");
+        return;
+    }
     
+    const question = questions[index];
+    
+    // Mostra il contenuto della domanda
     document.getElementById('home').style.display = 'none';
-    document.getElementById('leaderboard').style.display = 'block';
+    document.getElementById('leaderboard').style.display = 'none';
+    document.getElementById('questionPage').style.display = 'block';
+    
+    const questionContent = document.getElementById('questionContent');
+    questionContent.innerHTML = `
+        <h2>${question.question}</h2>
+        ${question.options.map(option => 
+            `<button onclick="checkAnswer('${option}', '${question.answer}')">${option}</button>`
+        ).join('')}
+    `;
+}
+
+// Verifica la risposta
+function checkAnswer(selected, correct) {
+    if (selected === correct) {
+        score++;
+        alert("Risposta corretta!");
+    } else {
+        alert("Risposta errata!");
+    }
+    
+    // Torna alla home dopo la risposta
+    showHome();
+}
+
+// Funzione per inviare video (opzionale)
+function submitVideos() {
+    const videoInput = document.getElementById('videoLinks');
+    const links = videoInput.value.split(",").map(link => link.trim()).slice(0, 5); // Aggiungi un massimo di 5 link
+    videoLinks = videoLinks.concat(links);
+    alert(`Video inviati: ${links.join(', ')}`);
 }

@@ -37,8 +37,35 @@ input {
 
 #menuContent {
     display: none;
+    position: absolute;
+    left: 20px;
+    top: 50px;
+    background-color: #fff;
+    padding: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
 #menuButton:focus + #menuContent {
     display: block;
+}
+
+#countdown {
+    position: absolute;
+    right: 20px;
+    top: 20px;
+    font-size: 18px;
+    font-weight: bold;
+    color: red;
+}
+
+#backBtn {
+    background-color: transparent;
+    color: black;
+    font-size: 20px;
+    border: none;
+    margin-top: 10px;
+}
+
+#backBtn:hover {
+    color: #444;
 }
