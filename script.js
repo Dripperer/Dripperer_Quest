@@ -78,10 +78,18 @@ function register() {
     if (!localStorage.getItem(username)) {
         localStorage.setItem(username, password);
         alert("Registrazione completata!");
-        login();
+        login(); // Dopo la registrazione, fai il login automaticamente
     } else {
         alert("Username già esistente!");
     }
+}
+
+// Mostra la pagina di login
+function showLogin() {
+    document.getElementById('login').style.display = 'block';
+    document.getElementById('home').style.display = 'none';
+    document.getElementById('leaderboard').style.display = 'none';
+    document.getElementById('questionPage').style.display = 'none';
 }
 
 // Mostra la home dopo il login

@@ -69,3 +69,74 @@ input {
 #backBtn:hover {
     color: #444;
 }
+body {
+    font-family: 'Comic Sans MS', sans-serif;
+    background-color: #fff;
+    color: black;
+    text-align: center;
+}
+
+h1 {
+    font-size: 24px;
+}
+
+button {
+    background-color: black;
+    color: white;
+    font-size: 18px;
+    padding: 10px;
+    margin: 5px;
+    border: none;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #444;
+}
+
+input {
+    font-size: 16px;
+    padding: 10px;
+    margin: 10px;
+    width: 80%;
+    border: 2px solid black;
+}
+
+.page {
+    display: none;
+}
+
+#menuContent {
+    display: none;
+    position: absolute;
+    left: 20px;
+    top: 50px;
+    background-color: #fff;
+    padding: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+#menuButton:focus + #menuContent {
+    display: block;
+}
+
+#countdown {
+    position: absolute;
+    right: 20px;
+    top: 20px;
+    font-size: 18px;
+    font-weight: bold;
+    color: red;
+}
+
+#backBtn {
+    background-color: transparent;
+    color: black;
+    font-size: 20px;
+    border: none;
+    margin-top: 10px;
+}
+
+#backBtn:hover {
+    color: #444;
+}
