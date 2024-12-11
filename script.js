@@ -23,6 +23,7 @@ document.getElementById('submitVideos').onclick = submitVideos;
 document.getElementById('homeBtn').onclick = showHome;
 document.getElementById('leaderboardBtn').onclick = showLeaderboard;
 document.getElementById('backBtn').onclick = showHome; // Aggiungi il ritorno alla home
+document.getElementById('logoutBtn').onclick = logout; // Logout
 
 // Funzione per il countdown settimanale
 function startCountdown() {
@@ -82,6 +83,12 @@ function register() {
     } else {
         alert("Username già esistente!");
     }
+}
+
+// Funzione di logout
+function logout() {
+    currentUser = null;
+    showLogin();
 }
 
 // Mostra la pagina di login
