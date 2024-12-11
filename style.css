@@ -1,0 +1,44 @@
+body {
+    font-family: 'Comic Sans MS', sans-serif;
+    background-color: #fff;
+    color: black;
+    text-align: center;
+}
+
+h1 {
+    font-size: 24px;
+}
+
+button {
+    background-color: black;
+    color: white;
+    font-size: 18px;
+    padding: 10px;
+    margin: 5px;
+    border: none;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #444;
+}
+
+input {
+    font-size: 16px;
+    padding: 10px;
+    margin: 10px;
+    width: 80%;
+    border: 2px solid black;
+}
+
+.page {
+    display: none;
+}
+
+#menuContent {
+    display: none;
+}
+
+#menuButton:focus + #menuContent {
+    display: block;
+}

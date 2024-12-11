@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DRIPPERER QUEST</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="menu">
+        <button id="menuButton">☰</button>
+        <div id="menuContent">
+            <button id="loginBtn">Accedi / Registrati</button>
+            <button id="homeBtn">Home</button>
+            <button id="leaderboardBtn">Classifica</button>
+        </div>
+    </div>
+
+    <div id="login" class="page">
+        <h1>Login / Registrati</h1>
+        <input type="text" id="username" placeholder="Username">
+        <input type="password" id="password" placeholder="Password">
+        <button id="loginSubmit">Accedi</button>
+        <button id="registerSubmit">Registrati</button>
+    </div>
+
+    <div id="home" class="page" style="display:none;">
+        <h1>DRIPPERER QUEST</h1>
+        <div id="questionsList"></div>
+        <input type="text" id="videoLinks" placeholder="Inserisci massimo 5 link TikTok/Shorts">
+        <button id="submitVideos">Invia Video</button>
+    </div>
+
+    <div id="leaderboard" class="page" style="display:none;">
+        <h1>Classifica Settimanale</h1>
+        <div id="leaderboardList"></div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
