@@ -65,14 +65,27 @@ function login() {
         currentUser = username;
         showHome();
     } else {
-        alert("Nome utente o password errati!");
+        alert("Credenziali errate.");
+    }
+}
+
+function register() {
+    const username = document.getElementById('username').value;
+    const password = document.getElementById('password').value;
+
+    if (!localStorage.getItem(username)) {
+        localStorage.setItem(username, password);
+        currentUser = username;
+        showHome();
+    } else {
+        alert("Nome utente già esistente.");
     }
 }
 
 function showHome() {
     document.getElementById('login').style.display = 'none';
     document.getElementById('home').style.display = 'block';
-    document.getElementById('menuButton').style.display = 'block'; // Mostra il menu
+    document.getElementById('menuButton').style.display = 'block';
 }
 
 function showLeaderboard() {
