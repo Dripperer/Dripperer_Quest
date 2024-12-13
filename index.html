@@ -6,52 +6,135 @@
     <title>Dripperer Quest</title>
     <link href="https://fonts.googleapis.com/css2?family=Comic+Sans+MS&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Comic Sans MS', sans-serif; background-color: #fff; color: #000; margin: 0; padding: 0; }
-        h1, h2, h3 { text-align: center; }
-        button { margin: 10px; padding: 10px 20px; cursor: pointer; }
-        #menuContent { 
-            display: none; 
-            position: fixed; 
-            top: 0; 
-            left: 0; 
-            background-color: #f4f4f4; 
-            width: 250px; 
-            height: 100%; 
-            padding: 20px; 
-            box-shadow: 2px 0 5px rgba(0,0,0,0.2); 
-            z-index: 100;
+        /* Stili globali */
+        body {
+            font-family: 'Comic Sans MS', sans-serif;
+            background-color: #f4f4f9;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            flex-direction: column;
+            text-align: center;
         }
-        .container { 
-            padding: 20px; 
-            max-width: 400px; 
-            margin: 0 auto; 
-            display: flex; 
-            flex-direction: column; 
-            justify-content: center; 
-            align-items: center; 
-        }
-        #menuButton { 
-            position: absolute; 
-            top: 10px; 
-            left: 10px; 
-            font-size: 30px; 
-        }
-        #countdown { position: absolute; top: 10px; right: 10px; }
-        .back-button { margin-top: 20px; cursor: pointer; }
-        #questionPage button { display: block; margin: 10px 0; }
 
-        /* Centrato il form di login */
-        .login-form input, .login-form button {
-            width: 100%;
-            max-width: 300px;
-            margin-bottom: 10px;
+        h1, h2, h3 {
+            color: #333;
+        }
+
+        button {
+            background-color: black;
+            color: white;
+            font-size: 18px;
             padding: 10px;
-            font-size: 16px;
+            margin: 5px;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
         }
 
-        /* Per il menu laterale */
+        button:hover {
+            background-color: #444;
+        }
+
+        input {
+            font-size: 16px;
+            padding: 10px;
+            margin: 10px;
+            width: 80%;
+            border: 2px solid black;
+            border-radius: 5px;
+        }
+
+        .container {
+            padding: 20px;
+        }
+
+        /* Menu laterale */
+        #menuContent {
+            display: none;
+            position: absolute;
+            top: 50px;
+            left: 0;
+            background-color: #fff;
+            width: 200px;
+            height: 100%;
+            padding: 10px;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+        }
+
         #menuButton {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background-color: #6c5ce7;
+            border: none;
+            color: white;
+            font-size: 20px;
+            padding: 10px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        /* Countdown */
+        #countdown {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 18px;
+            font-weight: bold;
+            color: red;
+        }
+
+        /* Domande */
+        .question {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            padding: 15px;
+            margin: 10px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .question button {
+            background-color: #00b894;
+        }
+
+        .question button:hover {
+            background-color: #019c7f;
+        }
+
+        /* Barra laterale attiva */
+        #menuContent.active {
             display: block;
+        }
+
+        /* Pagine */
+        .page {
+            display: none;
+        }
+
+        #backBtn {
+            background-color: transparent;
+            color: black;
+            font-size: 20px;
+            border: none;
+            margin-top: 10px;
+            cursor: pointer;
+        }
+
+        #backBtn:hover {
+            color: #444;
+        }
+
+        /* Layout della home */
+        .video-container {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 20px;
         }
     </style>
 </head>
@@ -66,8 +149,8 @@
     </div>
 
     <!-- Login Page -->
-    <div id="login" style="display: block;">
-        <div class="container login-form">
+    <div id="login" class="page" style="display: block;">
+        <div class="container">
             <h1>Accedi o Registrati</h1>
             <input type="text" id="username" placeholder="Nome utente" required><br><br>
             <input type="password" id="password" placeholder="Password" required><br><br>
@@ -77,24 +160,20 @@
     </div>
 
     <!-- Home Page -->
-    <div id="home" style="display: none;">
+    <div id="home" class="page" style="display: none;">
         <h1>Benvenuto a Dripperer Quest!</h1>
         <div id="questionsList"></div>
+        <div class="video-container">
+            <!-- Caselle video possono essere inserite qui -->
+        </div>
         <button id="logoutBtn">Esci</button>
     </div>
 
     <!-- Leaderboard Page -->
-    <div id="leaderboard" style="display: none;">
+    <div id="leaderboard" class="page" style="display: none;">
         <h1>Classifica</h1>
         <div id="leaderboardList"></div>
         <button id="backToHomeBtn">Torna alla Home</button>
-    </div>
-
-    <!-- Question Page -->
-    <div id="questionPage" style="display: none;">
-        <h1>Domanda</h1>
-        <div id="questionContent"></div>
-        <button class="back-button" id="backBtn">← Torna alla Home</button>
     </div>
 
     <!-- Countdown Timer -->

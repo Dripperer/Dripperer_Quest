@@ -13,21 +13,66 @@ const questions = [
 
 let currentUser = null;
 let score = 0;
-let videoLinks = [];
-let hasAnswered = false;
 
-// Aggiungi eventi per il login, il menu e altre azioni
-document.getElementById('menuButton').onclick = toggleMenu;
-document.getElementById('loginSubmit').onclick = login;
-document.getElementById('registerSubmit').onclick = register;
+// Funzione per visualizzare la pagina Home
+function showHome() {
+    document.getElementById('home').style.display = 'block';
+    document.getElementById('login').style.display = 'none';
+    document.getElementById('leaderboard').style.display = 'none';
+    document.getElementById('menuContent').style.display = 'none';
+    
+    // Aggiungi le domande
+    let questionsHTML = '';
+    questions.forEach((q) => {
+        questionsHTML += `
+            <div class="question">
+                <h2>${q.question}</h2>
+                ${q.options.map(option => `<button onclick="checkAnswer('${q.answer}', '${option}')">${option}</button>`).join('')}
+            </div>
+        `;
+    });
+    document.getElementById('questionsList').innerHTML = questionsHTML;
+}
+
+// Funzione per controllare la risposta
+function checkAnswer(correctAnswer, selectedAnswer) {
+    if (correctAnswer === selectedAnswer) {
+        alert('Risposta corretta!');
+    } else {
+        alert('Risposta sbagliata!');
+    }
+}
+
+// Funzione per logout
+function logout() {
+    currentUser = null;
+    showLogin();
+}
+
+// Funzione per visualizzare il login
+function showLogin() {
+    document.getElementById('home').style.display = 'none';
+    document.getElementById('login').style.display = 'block';
+    document.getElementById('leaderboard').style.display = 'none';
+}
+
+// Gestione del menu laterale
+document.getElementById('menuButton').onclick = () => {
+    const menuContent = document.getElementById('menuContent');
+    menuContent.classList.toggle('active');
+};
+
+// Gestione dei bottoni
 document.getElementById('homeBtn').onclick = showHome;
-document.getElementById('leaderboardBtn').onclick = showLeaderboard;
-document.getElementById('backBtn').onclick = showHome;
+document.getElementById('leaderboardBtn').onclick = () => alert('Funzione non implementata');
 document.getElementById('logoutBtn').onclick = logout;
 document.getElementById('backToHomeBtn').onclick = showHome;
 
+startCountdown();
+
+// Funzione per il countdown (già definita in precedenza)
 function startCountdown() {
-    const endDate = new Date(localStorage.getItem('weekEndDate') || new Date().getTime() + 7 * 24 * 60 * 60 * 1000); 
+    const endDate = new Date(localStorage.getItem('weekEndDate') || new Date().getTime() + 7 * 24 * 60 * 60 * 1000);
     localStorage.setItem('weekEndDate', endDate);
 
     function updateCountdown() {
@@ -48,54 +93,4 @@ function startCountdown() {
 
     setInterval(updateCountdown, 1000);
     updateCountdown();
-}
-
-startCountdown();
-
-function toggleMenu() {
-    const menuContent = document.getElementById('menuContent');
-    menuContent.style.display = (menuContent.style.display === 'block') ? 'none' : 'block';
-}
-
-function login() {
-    const username = document.getElementById('username').value;
-    const password = document.getElementById('password').value;
-
-    if (localStorage.getItem(username) === password) {
-        currentUser = username;
-        showHome();
-    } else {
-        alert("Credenziali errate.");
-    }
-}
-
-function register() {
-    const username = document.getElementById('username').value;
-    const password = document.getElementById('password').value;
-
-    if (!localStorage.getItem(username)) {
-        localStorage.setItem(username, password);
-        currentUser = username;
-        showHome();
-    } else {
-        alert("Nome utente già esistente.");
-    }
-}
-
-function showHome() {
-    document.getElementById('login').style.display = 'none';
-    document.getElementById('home').style.display = 'block';
-    document.getElementById('menuButton').style.display = 'block';
-}
-
-function showLeaderboard() {
-    document.getElementById('home').style.display = 'none';
-    document.getElementById('leaderboard').style.display = 'block';
-}
-
-function logout() {
-    currentUser = null;
-    document.getElementById('home').style.display = 'none';
-    document.getElementById('login').style.display = 'block';
-    document.getElementById('menuButton').style.display = 'none';
 }
