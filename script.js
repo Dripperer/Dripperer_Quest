@@ -13,7 +13,7 @@ const questions = [
 
 let currentUser = null;
 let score = 0;
-let questionAnswered = false;  // Variabile per tenere traccia della risposta
+let questionAnswered = new Array(questions.length).fill(false); // Array per tracciare se ogni domanda è stata già risposta
 
 // Funzione per visualizzare la pagina Home
 function showHome() {
@@ -27,35 +27,35 @@ function showHome() {
     questions.forEach((q, index) => {
         questionsHTML += `
             <div class="question">
-                <h2>${q.question}</h2>
-                ${q.options.map(option => `
-                    <button onclick="checkAnswer('${q.answer}', '${option}', ${index})" id="btn-${index}-${option}">${option}</button>
-                `).join('')}
+                <h3>${q.question}</h3>
+                ${q.options.map((option, i) => `<button onclick="checkAnswer('${q.answer}', '${option}', ${index})" id="btn-${index}-${i}">${option}</button>`).join('')}
             </div>
         `;
     });
     document.getElementById('questionsList').innerHTML = questionsHTML;
+    startCountdown();
 }
 
-// Funzione per controllare la risposta
+// Funzione di controllo della risposta
 function checkAnswer(correctAnswer, selectedAnswer, questionIndex) {
-    // Se la domanda è già stata risposta, non fare nulla
-    if (questionAnswered) return;
+    if (questionAnswered[questionIndex]) return; // Se la domanda è già stata risolta, non fare nulla
 
-    // Disabilita tutte le risposte
+    // Disabilita i pulsanti per quella domanda
     const buttons = document.querySelectorAll(`#btn-${questionIndex}`);
     buttons.forEach(button => button.disabled = true);
 
+    // Verifica la risposta
     if (correctAnswer === selectedAnswer) {
         alert('Risposta corretta!');
+        score++;
     } else {
         alert('Risposta sbagliata!');
     }
 
-    questionAnswered = true; // Imposta che la domanda è stata risposta
+    questionAnswered[questionIndex] = true; // Segna che la domanda è stata risolta
 }
 
-// Funzione di login
+// Funzione per il login
 document.getElementById('loginSubmit').onclick = function() {
     const username = document.getElementById('username').value;
     const password = document.getElementById('password').value;
@@ -77,19 +77,17 @@ document.getElementById('registerSubmit').onclick = function() {
     showHome(); // Vai alla home dopo la registrazione
 };
 
-// Gestione menu laterale
+// Funzione per il menu laterale
 document.getElementById('menuButton').onclick = function() {
     const menuContent = document.getElementById('menuContent');
     menuContent.classList.toggle('active');
 };
 
-document.getElementById('homeBtn').onclick = showHome;
+// Funzione per il logout
 document.getElementById('logoutBtn').onclick = function() {
     currentUser = null;
     showLogin(); // Torna al login
 };
-
-startCountdown();
 
 // Funzione per il countdown (già definita in precedenza)
 function startCountdown() {
