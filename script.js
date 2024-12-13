@@ -13,6 +13,7 @@ const questions = [
 
 let currentUser = null;
 let score = 0;
+let questionAnswered = false;  // Variabile per tenere traccia della risposta
 
 // Funzione per visualizzare la pagina Home
 function showHome() {
@@ -23,11 +24,13 @@ function showHome() {
     
     // Aggiungi le domande
     let questionsHTML = '';
-    questions.forEach((q) => {
+    questions.forEach((q, index) => {
         questionsHTML += `
             <div class="question">
                 <h2>${q.question}</h2>
-                ${q.options.map(option => `<button onclick="checkAnswer('${q.answer}', '${option}')">${option}</button>`).join('')}
+                ${q.options.map(option => `
+                    <button onclick="checkAnswer('${q.answer}', '${option}', ${index})" id="btn-${index}-${option}">${option}</button>
+                `).join('')}
             </div>
         `;
     });
@@ -35,38 +38,56 @@ function showHome() {
 }
 
 // Funzione per controllare la risposta
-function checkAnswer(correctAnswer, selectedAnswer) {
+function checkAnswer(correctAnswer, selectedAnswer, questionIndex) {
+    // Se la domanda è già stata risposta, non fare nulla
+    if (questionAnswered) return;
+
+    // Disabilita tutte le risposte
+    const buttons = document.querySelectorAll(`#btn-${questionIndex}`);
+    buttons.forEach(button => button.disabled = true);
+
     if (correctAnswer === selectedAnswer) {
         alert('Risposta corretta!');
     } else {
         alert('Risposta sbagliata!');
     }
+
+    questionAnswered = true; // Imposta che la domanda è stata risposta
 }
 
-// Funzione per logout
-function logout() {
-    currentUser = null;
-    showLogin();
-}
+// Funzione di login
+document.getElementById('loginSubmit').onclick = function() {
+    const username = document.getElementById('username').value;
+    const password = document.getElementById('password').value;
 
-// Funzione per visualizzare il login
-function showLogin() {
-    document.getElementById('home').style.display = 'none';
-    document.getElementById('login').style.display = 'block';
-    document.getElementById('leaderboard').style.display = 'none';
-}
+    if (localStorage.getItem(username) === password) {
+        currentUser = username;
+        showHome(); // Vai alla home dopo il login
+    } else {
+        alert('Credenziali errate');
+    }
+};
 
-// Gestione del menu laterale
-document.getElementById('menuButton').onclick = () => {
+// Funzione per la registrazione
+document.getElementById('registerSubmit').onclick = function() {
+    const username = document.getElementById('username').value;
+    const password = document.getElementById('password').value;
+    localStorage.setItem(username, password);
+    currentUser = username;
+    showHome(); // Vai alla home dopo la registrazione
+};
+
+// Gestione menu laterale
+document.getElementById('menuButton').onclick = function() {
     const menuContent = document.getElementById('menuContent');
     menuContent.classList.toggle('active');
 };
 
-// Gestione dei bottoni
 document.getElementById('homeBtn').onclick = showHome;
-document.getElementById('leaderboardBtn').onclick = () => alert('Funzione non implementata');
-document.getElementById('logoutBtn').onclick = logout;
-document.getElementById('backToHomeBtn').onclick = showHome;
+document.getElementById('logoutBtn').onclick = function() {
+    currentUser = null;
+    showLogin(); // Torna al login
+};
 
 startCountdown();
 
