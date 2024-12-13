@@ -20,7 +20,7 @@ function showHome() {
     document.getElementById('home').style.display = 'block';
     document.getElementById('login').style.display = 'none';
     document.getElementById('leaderboard').style.display = 'none';
-    document.getElementById('menuContent').style.display = 'none';
+    document.getElementById('menuContent').style.display = 'block'; // Rendi il menu visibile nella home
     
     // Aggiungi le domande
     let questionsHTML = '';
@@ -33,7 +33,6 @@ function showHome() {
         `;
     });
     document.getElementById('questionsList').innerHTML = questionsHTML;
-    startCountdown();
 }
 
 // Funzione di controllo della risposta
@@ -55,7 +54,13 @@ function checkAnswer(correctAnswer, selectedAnswer, questionIndex) {
     questionAnswered[questionIndex] = true; // Segna che la domanda è stata risolta
 }
 
-// Funzione per il login
+// Gestione menu laterale
+document.getElementById('menuButton').onclick = function() {
+    const menuContent = document.getElementById('menuContent');
+    menuContent.classList.toggle('active');
+}
+
+// Gestione login
 document.getElementById('loginSubmit').onclick = function() {
     const username = document.getElementById('username').value;
     const password = document.getElementById('password').value;
@@ -68,7 +73,7 @@ document.getElementById('loginSubmit').onclick = function() {
     }
 };
 
-// Funzione per la registrazione
+// Gestione registrazione
 document.getElementById('registerSubmit').onclick = function() {
     const username = document.getElementById('username').value;
     const password = document.getElementById('password').value;
@@ -77,19 +82,18 @@ document.getElementById('registerSubmit').onclick = function() {
     showHome(); // Vai alla home dopo la registrazione
 };
 
-// Funzione per il menu laterale
-document.getElementById('menuButton').onclick = function() {
-    const menuContent = document.getElementById('menuContent');
-    menuContent.classList.toggle('active');
-};
-
-// Funzione per il logout
+// Funzione logout
 document.getElementById('logoutBtn').onclick = function() {
     currentUser = null;
     showLogin(); // Torna al login
 };
 
-// Funzione per il countdown (già definita in precedenza)
+// Gestione ritorno alla home dalla classifica
+document.getElementById('backToHomeBtn').onclick = function() {
+    showHome();
+};
+
+// Funzione per il countdown
 function startCountdown() {
     const endDate = new Date(localStorage.getItem('weekEndDate') || new Date().getTime() + 7 * 24 * 60 * 60 * 1000);
     localStorage.setItem('weekEndDate', endDate);
@@ -113,3 +117,5 @@ function startCountdown() {
     setInterval(updateCountdown, 1000);
     updateCountdown();
 }
+
+startCountdown();
